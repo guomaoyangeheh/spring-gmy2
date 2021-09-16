@@ -1275,6 +1275,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	 */
 	protected RootBeanDefinition getMergedLocalBeanDefinition(String beanName) throws BeansException {
 		// Quick check on the concurrent map first, with minimal locking.
+		// 首先尝试先从缓存中拿
 		RootBeanDefinition mbd = this.mergedBeanDefinitions.get(beanName);
 		if (mbd != null && !mbd.stale) {
 			return mbd;
@@ -1321,8 +1322,10 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 
 			if (mbd == null || mbd.stale) {
 				previous = mbd;
+				// 没有设置父BD
 				if (bd.getParentName() == null) {
 					// Use copy of given root bean definition.
+					// 下面其实就是复制当前BD的属性重新生成一个RootBD
 					if (bd instanceof RootBeanDefinition) {
 						mbd = ((RootBeanDefinition) bd).cloneBeanDefinition();
 					}
@@ -1335,10 +1338,15 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 					BeanDefinition pbd;
 					try {
 						String parentBeanName = transformedBeanName(bd.getParentName());
+						/**
+						 * 这里去拿父BD合并后的BD，可能父BD也有继承的父BD，所以可以理解为下面走了个递归
+						 * 先让父BD去合并，把什么祖父、祖祖父。。。的属性统统合并过来之后，此时的pbd才是完全体的
+						 */
 						if (!beanName.equals(parentBeanName)) {
 							pbd = getMergedBeanDefinition(parentBeanName);
 						}
 						else {
+							// 如果BeanName和父BD的相同，则去父Bean工厂获取这个父BD（因为相同的BeanName是不在再同一工厂存在的）
 							BeanFactory parent = getParentBeanFactory();
 							if (parent instanceof ConfigurableBeanFactory) {
 								pbd = ((ConfigurableBeanFactory) parent).getMergedBeanDefinition(parentBeanName);
@@ -1355,7 +1363,9 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 								"Could not resolve parent bean definition '" + bd.getParentName() + "'", ex);
 					}
 					// Deep copy with overridden values.
+					// 使用父BD创建一个RootBD
 					mbd = new RootBeanDefinition(pbd);
+					// 用当前BD的属性去覆盖mbd，当前BD没有设置的属性则直接继承父BD的
 					mbd.overrideFrom(bd);
 				}
 
