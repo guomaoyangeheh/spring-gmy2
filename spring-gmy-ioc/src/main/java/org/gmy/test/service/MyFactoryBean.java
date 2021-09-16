@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
  * @Author guomaoyang
  * @Date 2021/9/14
  */
-@Component
+//@Component
 public class MyFactoryBean implements FactoryBean<UserServiceImpl> {
 
 	@Override

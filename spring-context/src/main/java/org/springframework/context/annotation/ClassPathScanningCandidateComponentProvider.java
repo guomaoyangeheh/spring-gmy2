@@ -415,7 +415,7 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 	private Set<BeanDefinition> scanCandidateComponents(String basePackage) {
 		Set<BeanDefinition> candidates = new LinkedHashSet<>();
 		try {
-			// 根据传入的包名构造路径
+			// 根据传入的包名构造路径  classpath*:org/gmy/test/service/**/*.class
 			String packageSearchPath = ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX +
 					resolveBasePackage(basePackage) + '/' + this.resourcePattern;
 			// 根据以上路径获取资源文件，class文件对象
@@ -428,8 +428,9 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 				}
 				if (resource.isReadable()) {
 					try {
-						// 拿到资源的元数据reader
+						// 拿到资源的元数据reader，这里用到了ASM
 						MetadataReader metadataReader = getMetadataReaderFactory().getMetadataReader(resource);
+						// 校验是否匹配"排除过滤器"和"包含过滤器"，至少要匹配上一个"包含过滤器"
 						if (isCandidateComponent(metadataReader)) {
 							ScannedGenericBeanDefinition sbd = new ScannedGenericBeanDefinition(metadataReader);
 							sbd.setSource(resource);

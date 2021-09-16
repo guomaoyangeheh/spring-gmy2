@@ -1,5 +1,6 @@
 package org.gmy.test;
 
+import org.gmy.test.service.MyFactoryBean;
 import org.gmy.test.service.UserServiceImpl;
 import org.springframework.context.annotation.AnnotatedBeanDefinitionReader;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -21,6 +22,8 @@ import java.io.IOException;
 public class ApplicationgStart {
 	public static void main(String[] args) throws IOException {
 		AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext(ApplicationgStart.class);
+		System.out.println(applicationContext.getBean("userService"));
+		System.out.println(applicationContext.getBean("myFactoryBean"));
 		/*UserServiceImpl userServiceImpl = applicationContext.getBean("userService", UserServiceImpl.class);
 		userServiceImpl.sayHello();*/
 		/*AnnotatedBeanDefinitionReader annotatedBeanDefinitionReader = new AnnotatedBeanDefinitionReader(applicationContext);
