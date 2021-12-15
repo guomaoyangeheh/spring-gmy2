@@ -8,15 +8,15 @@ import org.springframework.stereotype.Component;
  * @Date 2021/9/14
  */
 //@Component
-public class MyFactoryBean implements FactoryBean<UserServiceImpl> {
+public class MyFactoryBean implements FactoryBean<UserService> {
 
 	@Override
-	public UserServiceImpl getObject() throws Exception {
-		return new UserServiceImpl();
+	public UserService getObject() throws Exception {
+		return new UserService();
 	}
 
 	@Override
 	public Class<?> getObjectType() {
-		return UserServiceImpl.class;
+		return UserService.class;
 	}
 }
