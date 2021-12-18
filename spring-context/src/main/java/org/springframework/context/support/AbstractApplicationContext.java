@@ -533,24 +533,38 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				invokeBeanFactoryPostProcessors(beanFactory);
 
 				// Register bean processors that intercept bean creation.
+				/**
+				 * 在上一步可能扫描到了其他人为创建的BeanPostProcessor，在此进行注册
+				 */
 				registerBeanPostProcessors(beanFactory);
 
 				// Initialize message source for this context.
+				// 国际化支持
 				initMessageSource();
 
 				// Initialize event multicaster for this context.
+				// 初始化事件发布器
 				initApplicationEventMulticaster();
 
 				// Initialize other special beans in specific context subclasses.
+				// 空方法，提供给子类扩展
 				onRefresh();
 
 				// Check for listener beans and register them.
+				// 注册监听器
 				registerListeners();
 
 				// Instantiate all remaining (non-lazy-init) singletons.
+				// 主要完成"非懒加载"单例Bean的初始化
 				finishBeanFactoryInitialization(beanFactory);
 
 				// Last step: publish corresponding event.
+				/**
+				 * 1.清除Context资源缓存
+				 * 2.初始化LifecycleProcessor，默认情况下使用DefaultLifecycleProcessor
+				 * 3.调用LifecycleProcessor.onRefresh()方法，通知容器刷新（很多第三方包使用此功能扩展）
+				 * 4.发布ContextRefreshedEvent事件
+				 */
 				finishRefresh();
 			}
 
@@ -825,6 +839,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	protected void registerListeners() {
 		// Register statically specified listeners first.
 		for (ApplicationListener<?> listener : getApplicationListeners()) {
+			// 向事件发布器注册监听器
 			getApplicationEventMulticaster().addApplicationListener(listener);
 		}
 

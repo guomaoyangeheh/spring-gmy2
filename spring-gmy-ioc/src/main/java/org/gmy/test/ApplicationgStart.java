@@ -1,7 +1,7 @@
 package org.gmy.test;
 
 import org.gmy.test.service.AppConfig;
-import org.gmy.test.service.UserService;
+import org.gmy.test.service.test.postprocessor.UserService;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.io.IOException;
@@ -12,7 +12,12 @@ import java.io.IOException;
  */
 public class ApplicationgStart {
 	public static void main(String[] args) throws IOException {
-		AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext(AppConfig.class);
+		AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext();
+		applicationContext.register(AppConfig.class);
+		applicationContext.refresh();
+		UserService bean = applicationContext.getBean(UserService.class);
+		bean.test();
+		//applicationContext.publishEvent("123");
 		/*System.out.println(applicationContext.getBean("userService"));
 		System.out.println(applicationContext.getBean("myFactoryBean"));*/
 		/*UserService userService = applicationContext.getBean("userService", UserService.class);

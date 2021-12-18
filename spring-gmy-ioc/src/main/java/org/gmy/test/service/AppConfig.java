@@ -10,11 +10,16 @@ import org.springframework.context.annotation.Configuration;
  * @Date 2021/9/23
  */
 @Configuration
-@ComponentScan("org.gmy.test.service.test.circular")
+@ComponentScan("org.gmy.test.service.test.postprocessor")
 public class AppConfig {
 
 	/*@Bean(autowire = Autowire.BY_NAME)
 	public UserService userService(){
 		return new UserService();
+	}*/
+
+	/*@Bean(autowire = Autowire.BY_NAME)
+	public ServiceC serviceC(){
+		return new ServiceC();
 	}*/
 }
