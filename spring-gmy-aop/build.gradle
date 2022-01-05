@@ -1,0 +1,8 @@
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile(project(":spring-context"))
+    compile(project(":spring-jdbc"))
+    compile(project(":spring-aspects"))
+
+    compile(group: 'mysql',name: 'mysql-connector-java',version: '5.1.45')
+}
