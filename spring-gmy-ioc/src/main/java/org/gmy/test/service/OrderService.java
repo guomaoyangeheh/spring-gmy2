@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
  * @Author guomaoyang
  * @Date 2021/9/23
  */
-@Component
+//@Component
 public class OrderService {
 
 	private Integer age;

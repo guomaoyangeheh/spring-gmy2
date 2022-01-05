@@ -22,12 +22,12 @@ public class UserService {
 		System.out.println("orderService:"+orderService);
 	}
 
-	public void setOrderService(OrderService orderService) {
+	/*public void setOrderService(OrderService orderService) {
 		this.orderService = orderService;
 	}
 	public void setAge(Integer age) {
 		this.age = age;
-	}
+	}*/
 
 	/*public UserServiceImpl() {
 		System.out.println("UserServiceImpl construct...");

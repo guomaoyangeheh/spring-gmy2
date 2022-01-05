@@ -137,6 +137,9 @@ class ConfigurationClassBeanDefinitionReader {
 			return;
 		}
 
+		/**
+		 * 原因是被@Import导入的类此时还没有生成BeanDefinition，所以在此处创建导入类的BeanDefinition。
+		 */
 		if (configClass.isImported()) {
 			registerBeanDefinitionForImportedConfigurationClass(configClass);
 		}

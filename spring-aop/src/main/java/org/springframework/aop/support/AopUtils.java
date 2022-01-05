@@ -223,12 +223,14 @@ public abstract class AopUtils {
 	 */
 	public static boolean canApply(Pointcut pc, Class<?> targetClass, boolean hasIntroductions) {
 		Assert.notNull(pc, "Pointcut must not be null");
+		// 首先进行class匹配，不满足直接返回false
 		if (!pc.getClassFilter().matches(targetClass)) {
 			return false;
 		}
 
 		MethodMatcher methodMatcher = pc.getMethodMatcher();
 		if (methodMatcher == MethodMatcher.TRUE) {
+			// 此类型MethodMatcher意味着匹配所有的方法
 			// No need to iterate the methods if we're matching any method anyway...
 			return true;
 		}
@@ -242,13 +244,18 @@ public abstract class AopUtils {
 		if (!Proxy.isProxyClass(targetClass)) {
 			classes.add(ClassUtils.getUserClass(targetClass));
 		}
+		// 将beanClass所有的接口加入到classes中，并在下面遍历
 		classes.addAll(ClassUtils.getAllInterfacesForClassAsSet(targetClass));
 
+		// 遍历beanClass和他的接口
 		for (Class<?> clazz : classes) {
+			// 拿到beanClass声明的所有方法
 			Method[] methods = ReflectionUtils.getAllDeclaredMethods(clazz);
 			for (Method method : methods) {
 				if (introductionAwareMethodMatcher != null ?
 						introductionAwareMethodMatcher.matches(method, targetClass, hasIntroductions) :
+						// 非IntroductionAwareMethodMatcher类型的methodMatcher在此处进行匹配
+						// 有一个方法匹配成功就返回true
 						methodMatcher.matches(method, targetClass)) {
 					return true;
 				}
@@ -288,7 +295,7 @@ public abstract class AopUtils {
 			PointcutAdvisor pca = (PointcutAdvisor) advisor;
 			return canApply(pca.getPointcut(), targetClass, hasIntroductions);
 		}
-		else {
+		else {// 没有pointcut 认为可以直接应用
 			// It doesn't have a pointcut so we assume it applies.
 			return true;
 		}
