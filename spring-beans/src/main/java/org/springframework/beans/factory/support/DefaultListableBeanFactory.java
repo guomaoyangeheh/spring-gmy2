@@ -528,6 +528,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 						boolean isNonLazyDecorated = dbd != null && !mbd.isLazyInit();
 						if (!isFactoryBean) {
 							if (includeNonSingletons || isSingleton(beanName, mbd, dbd)) {
+								// 判断类型是否匹配
 								matchFound = isTypeMatch(beanName, type, allowFactoryBeanInit);
 							}
 						}

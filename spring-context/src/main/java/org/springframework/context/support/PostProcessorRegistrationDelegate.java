@@ -126,6 +126,7 @@ final class PostProcessorRegistrationDelegate {
 			// Finally, invoke all other BeanDefinitionRegistryPostProcessors until no further ones appear.
 			/**
 			 * 这里回去循环执行以上逻辑，直到没有新的BeanDefinitionRegistryPostProcessor子类出现。
+			 * 此步是为了将所有的BeanDefinitionRegistryPostProcessor.class类型的Bean，执行完postProcessBeanDefinitionRegistry()方法。
 			 */
 			boolean reiterate = true;
 			while (reiterate) {

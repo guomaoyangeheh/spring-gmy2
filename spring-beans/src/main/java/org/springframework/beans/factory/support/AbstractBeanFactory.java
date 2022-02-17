@@ -242,6 +242,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	protected <T> T doGetBean(final String name, @Nullable final Class<T> requiredType,
 			@Nullable final Object[] args, boolean typeCheckOnly) throws BeansException {
 
+		// 将别名转换成规范名称。如果加了FactoryBean应用前缀"&"，先去除
 		final String beanName = transformedBeanName(name);
 		Object bean;
 
@@ -263,6 +264,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		else {
 			// Fail if we're already creating this bean instance:
 			// We're assumably within a circular reference.
+			// 如果bean正在创建中，还能走到这个分支，说明循环依赖除了异常，报错之
 			if (isPrototypeCurrentlyInCreation(beanName)) {
 				throw new BeanCurrentlyInCreationException(beanName);
 			}
@@ -1803,7 +1805,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			Object beanInstance, String name, String beanName, @Nullable RootBeanDefinition mbd) {
 
 		// Don't let calling code try to dereference the factory if the bean isn't a factory.
-		// 判断name是否是"&"开头，也就是是不是要拿FactoryBean的原始Bean（非getOjbect()获取的）
+		// 判断name是否是"&"开头，也就是是不是要拿FactoryBean的原始Bean（非getObject()获取的）
 		if (BeanFactoryUtils.isFactoryDereference(name)) {
 			if (beanInstance instanceof NullBean) {
 				return beanInstance;

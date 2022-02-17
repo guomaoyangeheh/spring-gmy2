@@ -162,6 +162,7 @@ public class ReflectiveMethodInvocation implements ProxyMethodInvocation, Clonea
 		// 刚开始 currentInterceptorIndex = -1
 		// 如果没有拦截器链直接调用目标方法
 		if (this.currentInterceptorIndex == this.interceptorsAndDynamicMethodMatchers.size() - 1) {
+			// 拦截器链调用完后执行目标方法
 			return invokeJoinpoint();
 		}
 		// 从拦截链下标0开始调用
@@ -185,7 +186,7 @@ public class ReflectiveMethodInvocation implements ProxyMethodInvocation, Clonea
 		else {
 			// It's an interceptor, so we just invoke it: The pointcut will have
 			// been evaluated statically before this object was constructed.
-			// 通过拦截器调用，会递归调用proceed()，知道拦截链的执行完，最后调用目标方法返回
+			// 通过拦截器调用，会递归调用proceed()，直到拦截链的执行完，最后调用目标方法返回
 			return ((MethodInterceptor) interceptorOrInterceptionAdvice).invoke(this);
 		}
 	}

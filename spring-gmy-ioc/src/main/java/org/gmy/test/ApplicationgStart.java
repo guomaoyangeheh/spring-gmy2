@@ -15,8 +15,9 @@ public class ApplicationgStart {
 		AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext();
 		applicationContext.register(AppConfig.class);
 		applicationContext.refresh();
-		UserService bean = applicationContext.getBean(UserService.class);
-		bean.test();
+		applicationContext.stop();
+		/*UserService bean = applicationContext.getBean(UserService.class);
+		bean.test();*/
 		//applicationContext.publishEvent("123");
 		/*System.out.println(applicationContext.getBean("userService"));
 		System.out.println(applicationContext.getBean("myFactoryBean"));*/

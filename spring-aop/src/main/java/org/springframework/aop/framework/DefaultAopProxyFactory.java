@@ -58,9 +58,9 @@ public class DefaultAopProxyFactory implements AopProxyFactory, Serializable {
 		/**
 		 * 都不满足就使用JDK代理
 		 * 三个判断分别对应以下3个操作
-		 * // 默认false，设置为true积极走CGLIB代理
+		 * // Optimize 默认false，设置为true积极走CGLIB代理
 		 * proxyFactory.setOptimize(true);
-		 * // 默认false，设置为true积极走CGLIB代理
+		 * // ProxyTargetClass 默认false，设置为true积极走CGLIB代理
 		 * proxyFactory.setProxyTargetClass(true);
 		 * // 设置接口就会默认走JDK的动态代理，下面就必须通过接口强转
 		 * proxyFactory.setInterfaces(UserFacade.class);
@@ -71,7 +71,7 @@ public class DefaultAopProxyFactory implements AopProxyFactory, Serializable {
 				throw new AopConfigException("TargetSource cannot determine target class: " +
 						"Either an interface or a target is required for proxy creation.");
 			}
-			// 如果目标类是个接口（一般不会这么做）
+			// 如果目标类是个接口 || 目标类是 Proxy.class 类型（一般不会这么做）
 			if (targetClass.isInterface() || Proxy.isProxyClass(targetClass)) {
 				return new JdkDynamicAopProxy(config);
 			}

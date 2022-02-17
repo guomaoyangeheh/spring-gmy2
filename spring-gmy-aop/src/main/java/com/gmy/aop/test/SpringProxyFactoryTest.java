@@ -66,27 +66,6 @@ public class SpringProxyFactoryTest {
 				return false;
 			}
 		});
-		proxyFactory.addAdvisor(new PointcutAdvisor() {
-			@Override
-			public Pointcut getPointcut() {
-				return new StaticMethodMatcherPointcut() {
-					@Override
-					public boolean matches(Method method, Class<?> targetClass) {
-						return method.getName().contains("a");
-					}
-				};
-			}
-
-			@Override
-			public Advice getAdvice() {
-				return new GmyBeforeAdvice();
-			}
-
-			@Override
-			public boolean isPerInstance() {
-				return false;
-			}
-		});
 		UserFacade proxy = (UserFacade) proxyFactory.getProxy();
 		// proxy.test();
 		proxy.a();

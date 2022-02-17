@@ -15,10 +15,11 @@ public class UserService implements UserFacade {
 	private JdbcTemplate jdbcTemplate;
 
 	@Transactional
-	public void test(){
-		jdbcTemplate.execute("INSERT into test VALUES(10,'DD')");
+	public UserFacade test(){
+		jdbcTemplate.execute("INSERT into test VALUES(22,'DD',2)");
 
 		System.out.println("test");
+		return this;
 	}
 
 	public void a(){

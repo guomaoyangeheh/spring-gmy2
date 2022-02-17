@@ -295,6 +295,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 	public Object postProcessAfterInitialization(@Nullable Object bean, String beanName) {
 		if (bean != null) {
 			Object cacheKey = getCacheKey(bean.getClass(), beanName);
+			// 这一步是判断该bean在循环依赖中是否已经提前创建了代理类，已经创建的话就不走了
 			if (this.earlyProxyReferences.remove(cacheKey) != bean) {
 				// 如果有必要就去生成代理类
 				return wrapIfNecessary(bean, beanName, cacheKey);
@@ -333,12 +334,15 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 	 * @return a proxy wrapping the bean, or the raw bean instance as-is
 	 */
 	protected Object wrapIfNecessary(Object bean, String beanName, Object cacheKey) {
+		// targetSourcedBean还不清楚是个什么玩意，貌似是自定义代理的
 		if (StringUtils.hasLength(beanName) && this.targetSourcedBeans.contains(beanName)) {
 			return bean;
 		}
+		// advisedBeans 缓存了已经确定是否需要"代理"的bean
 		if (Boolean.FALSE.equals(this.advisedBeans.get(cacheKey))) {
 			return bean;
 		}
+		// 基础设置类不需要被代理（Advice.class、Pointcut.class、Advisor.class、AopInfrastructureBean.class）
 		if (isInfrastructureClass(bean.getClass()) || shouldSkip(bean.getClass(), beanName)) {
 			this.advisedBeans.put(cacheKey, Boolean.FALSE);
 			return bean;
@@ -453,17 +457,20 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 		ProxyFactory proxyFactory = new ProxyFactory();
 		proxyFactory.copyFrom(this);
 
-		// 判断是否代理目标类
+		// 2.判断是用”目标类代理(CGLIB)“还是”接口代理(JDK)“
+		// 配置 @EnableTransactionManagement(proxyTargetClass=true),影响整个属性
 		if (!proxyFactory.isProxyTargetClass()) {
+			// 判断beanDefinition中的属性是配置了”preserveTargetClass“ = true
 			if (shouldProxyTargetClass(beanClass, beanName)) {
 				proxyFactory.setProxyTargetClass(true);
 			}
 			else {
+				// 拿到所有的接口 判断接口是否合格（非一些内部的接口 && 接口方法 > 0）
 				// 如果被代理类有合格的接口，会调用proxyFactory.addInterface(ifc);，后续走JDK动态代理
 				evaluateProxyInterfaces(beanClass, proxyFactory);
 			}
 		}
-
+		// 拿到的可能非标准Advisor，不标准的需要包装成标准的Advisor
 		Advisor[] advisors = buildAdvisors(beanName, specificInterceptors);
 		// proxyFactory的基本操作，设置Advisor、targetSource..
 		proxyFactory.addAdvisors(advisors);

@@ -5,6 +5,6 @@ package com.gmy.aop.common;
  * @Date 2021/12/22
  */
 public interface UserFacade {
-	public void test();
-	public void a();
+	UserFacade test();
+	void a();
 }
